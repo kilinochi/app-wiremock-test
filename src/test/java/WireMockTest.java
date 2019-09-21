@@ -31,11 +31,15 @@ public class WireMockTest {
                                 "    \"companyId\": 1\n" +
                                 "  }\n" +
                                 "]")));
-          stubFor(get(urlEqualTo("/companies/777/workers?name=Vasily&surname=Terkin"))
-               .willReturn(aResponse()
+          stubFor(get(urlPathMatching("/companies/777/\\d/workers"))
+                  .willReturn(aResponse()
                        .withStatus(404)
-                       .withBody("{}")
                ));
+        stubFor(any(anyUrl())
+                .atPriority(10)
+                .willReturn(aResponse()
+                        .withStatus(404)
+                        .withBody("{\"status\":\"Error\",\"message\":\"Endpoint not found\"}")));
     }
 
     @Test
